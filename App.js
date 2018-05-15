@@ -18,7 +18,7 @@ export default class App extends Component {
           <View>
             <IsLogin />
             <Switch>
-              <Route path="/login" component={ LoginPage } />
+              <Route path="/" component={ LoginPage } />
             </Switch>
           </View>
         </NativeRouter>
