@@ -1,5 +1,12 @@
 import React, { Component } from "react"
-import { StyleSheet, View, Text, ImageBackground, TextInput } from "react-native"
+import { connect } from "react-redux"
+import { login } from "../../redux/action/login.action.js" 
+import { StyleSheet, View, Text, ImageBackground, TextInput, Image } from "react-native"
+
+@connect(
+  state => state.login,
+  { login }
+)
 
 export default class LoginPage extends Component {
   constructor () {
@@ -7,14 +14,28 @@ export default class LoginPage extends Component {
     this.state = {
       pwd: ""
     }
+    this.onLogin = this.onLogin.bind(this)
   }
-  handleChangePwd (value) {
+  componentDidUpdate () {
+    if (this.props.isLogin) {
+      this.timer = setTimeout(() => {
+        this.props.history.push("/home")
+      }, 2000)
+    }
+  }
+  componentWillUnmount () {
+    clearTimeout(this.timer)
+  }
+  onChangePwd (value) {
     this.setState({
-      pwd: value,
+      pwd: value
     })
   }
+  onLogin () {
+    this.props.login(this.state.pwd)
+  }
   render () {
-    return (    
+    return (
       <ImageBackground source={ require("./bg.png") } resizeMode="cover" style={ styles.bgImage }>
         <View style={ styles.container }>
           <Text style={ styles.title }>
@@ -27,20 +48,27 @@ export default class LoginPage extends Component {
           <ImageBackground source={ require("./pwd.png") } resizeMode="cover" style={ styles.pwdImage }>
             <View style={ styles.container }>
               <TextInput value={ this.state.pwd } autoFocus={ true } maxLength={ 8 } placeholder="请输入统计序列号" placeholderTextColor="#34c3ff"
-                         underlineColorAndroid="transparent" style={ [styles.text, { width: 200 }] } onChangeText={ value => this.handleChangePwd(value) }
+                         underlineColorAndroid="transparent" onChangeText={ value => this.onChangePwd(value) } style={ [styles.text, { width: 200 }] }
               />
             </View>
           </ImageBackground>
           <ImageBackground source={ require("./login.png") } resizeMode="cover" style={ styles.loginImage }>
             <View style={ styles.container }>
-              <Text style={ styles.text }>登录</Text>
+              <Text onPress={ this.onLogin } style={ styles.text }>登录</Text>
             </View>
           </ImageBackground>
-          <ImageBackground source={ require("./msg.png") } resizeMode="cover" style={ styles.msgImage }>
-            <View style={ styles.container }>
-              <Text style={ styles.msg }>您输入的系统序列号有误！</Text>
-            </View>
-          </ImageBackground>
+          { this.props.msg? (
+            <ImageBackground source={ require("./msg.png") } resizeMode="cover" style={ styles.msgImage }>
+              <View style={ [styles.container, { flexDirection: "row" }] }>
+                { this.props.error? (
+                  <Image source={ require("./warning.png") } style={ styles.warning } />
+                ): null }
+                <Text style={ styles.msg }>{ this.props.msg }</Text>
+              </View>
+            </ImageBackground>
+          ): (
+            <View style={ styles.msgImage } />
+          ) }
         </View>
       </ImageBackground>
     )
@@ -99,6 +127,11 @@ const styles = StyleSheet.create({
     width: 127.5,
     height: 22,
     marginTop: 35
+  },
+  warning: {
+    width: 11,
+    height: 11,
+    marginRight: 2
   },
   msg: {
     fontSize: 10,

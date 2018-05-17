@@ -7,6 +7,7 @@ import { NativeRouter, Switch, Route } from "react-router-native"
 import reducer from "./src/redux/reducer.js"
 import IsLogin from "./src/container/isLogin/IsLogin.js"
 import LoginPage from "./src/container/loginPage/LoginPage.js"
+import HomePage from "./src/component/homePage/HomePage.js"
 
 const store = createStore(reducer, applyMiddleware(thunk))
 
@@ -18,7 +19,8 @@ export default class App extends Component {
           <View>
             <IsLogin />
             <Switch>
-              <Route path="/" component={ LoginPage } />
+              <Route path="/" component={ LoginPage } exact />
+              <Route path="/home" component={ HomePage } />
             </Switch>
           </View>
         </NativeRouter>
