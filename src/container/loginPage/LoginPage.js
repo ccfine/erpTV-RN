@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   title: {
-    fontFamily: "微软雅黑",
     fontWeight: "bold"
   }, 
   xq: {
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
     marginRight: 2
   },
   msg: {
-    fontSize: 10,
+    fontSize: 9,
     color: "#34c3ff"
   }
 })
